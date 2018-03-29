@@ -123,6 +123,7 @@ export default {
 			params.page = this.currentPage;
 			params.rows = this.pageSize;
 			const data = await this.searchApi(params);
+			console.log(data);
 			if (data && data.success) {
 				this.tableData = data.result.rows;
 				this.total = data.result.total;

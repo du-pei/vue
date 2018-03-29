@@ -4,7 +4,7 @@ const Collection = require('../collectionNames');
 Mmbs.Cloud.define('saveData', function(request, response) {
     const ClassObj = Mmbs.Object.extend(Collection.SYS_MENU);
     const classObj = new ClassObj();
-    classObj.save(obj, {
+    classObj.save(request.params, {
         success(model) {
             response.success(model);
         },

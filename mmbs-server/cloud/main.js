@@ -1,3 +1,6 @@
+require('./system/menu');
+require('./system/user');
+
 Mmbs.Cloud.define('getMessagesForUser', function(request, response) {
     var user = Mmbs.User.current();
 
@@ -57,5 +60,3 @@ function getChildren(parent, childres) {
         }
     }
 }
-
-require('./system/menu');

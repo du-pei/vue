@@ -8,35 +8,34 @@
 			<template slot="columns">
 				<el-table-column fixed type=index label="序号" align="center" width="70">
 				</el-table-column>
-				<el-table-column fixed prop="displayName" align="center" label="名称" width="180">
+				<el-table-column fixed prop="attributes.displayName" align="center" label="名称" width="180">
 				</el-table-column>
-				<el-table-column prop="userName" align="center" label="用户名" width="180"></el-table-column>
-				<el-table-column prop="password" align="center" label="密码" width="180"></el-table-column>
-				<el-table-column prop="mobilePhone" align="center" label="移动电话" width="180"></el-table-column>
+				<el-table-column prop="attributes.username" align="center" label="用户名" width="180"></el-table-column>
+				<el-table-column prop="attributes.mobilePhone" align="center" label="移动电话" width="180"></el-table-column>
 				<el-table-column align="center" label="是否锁定" width="180">
 					<template slot-scope="scope">
-						<span>{{$fmtBool(scope.row.isLock)}}</span>
+						<span>{{$fmtBool(scope.row.attributes.isLock)}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column align="center" label="是否启用" width="180">
 					<template slot-scope="scope">
-						<span>{{$fmtBool(scope.row.isActive)}}</span>
+						<span>{{$fmtBool(scope.row.attributes.isActive)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="accessFailedCount" align="center" label="验证错误次数" width="180"></el-table-column>
-				<el-table-column prop="lastLoginTime" align="center" label="最后登录时间">
+				<el-table-column prop="attributes.accessFailedCount" align="center" label="验证错误次数" width="180"></el-table-column>
+				<el-table-column prop="attributes.lastLoginTime" align="center" label="最后登录时间">
 				</el-table-column>
 				<el-table-column fixed="right" width="260" align="center" label="操作">
 					<template slot-scope="scope">
 						<el-button size="mini" type="" @click="onEdit(scope.$index, scope.row)">修改
 						</el-button>
-						<el-button size="mini" type="" @click="onChangePassword(scope.$index, scope.row)">修改密码</el-button>
+						<!-- <el-button size="mini" type="" @click="onChangePassword(scope.$index, scope.row)">修改密码</el-button>
 						<el-button size="mini" type="" @click="onChangeRole()">查看角色</el-button>
 						<el-button size="mini" type="" @click="onChangeOrg()">分配组织机构</el-button>
-						<!-- <el-button size="mini" type="" @click="on">启用</el-button>
-						<el-button size="mini" type="" @click="on">禁用</el-button> -->
+						<el-button size="mini" type="" @click="on">启用</el-button>
+						<el-button size="mini" type="" @click="on">禁用</el-button>
 						<el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除
-						</el-button>
+						</el-button> -->
 					</template>
 				</el-table-column>
 			</template>
@@ -46,7 +45,8 @@
 			<edit v-if="dialogFormVisible" :form="form"></edit>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogFormVisible = false">取 消</el-button>
-				<el-button type="primary" @click="onSave" v-loading="loading">确 定</el-button>
+				<el-button type="primary" v-if="this.form.id == 0" @click="onRegister" v-loading="loading">确 定</el-button>
+				<el-button type="primary" v-else @click="onSave" v-loading="loading">确 定</el-button>
 			</div>
 		</el-dialog>
 		<!-- 修改密码 -->
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { userList, addOrUpdateUser, deleteUser, changePass } from '@/api/mainData';
+import { getUsers, saveUser, deleteUser, registerUser } from '@/api/user';
 import edit from './edit';
 import changeOrg from './changeOrg';
 import changePassword from './changePassword';
@@ -85,7 +85,7 @@ import changeRole from './changeRole';
 export default {
 	data() {
 		return {
-			searchApi: userList,
+			searchApi: getUsers,
 			params: {
 				userName: ''
 			},
@@ -103,7 +103,9 @@ export default {
 				isStatic: false,
 				lastLoginTime: '',
 				password: '',
-				userName: ''
+				username: '',
+				mobilePhone: '',
+				email: ''
 			},
 			changePassForm: {
 				oldPassword: '',
@@ -125,7 +127,11 @@ export default {
 	},
 	methods: {
 		onEdit(index, row) {
-			this.form = row;
+			this.form = {};
+			this.form.id = row.id;
+			this.form.displayName = row.attributes.displayName;
+			this.form.username = row.attributes.username;
+			this.form.mobilePhone = row.attributes.mobilePhone;
 			this.dialogFormVisible = true;
 		},
 		onDelete(index, row) {
@@ -164,14 +170,37 @@ export default {
 		onSave() {
 			this.loading = true;
 			const userData = this.form;
-			addOrUpdateUser(userData)
+			saveUser(userData)
 				.then(res => {
 					if (res && res.success) {
 						this.$message({
 							message: '操作成功',
 							type: 'success'
 						});
-						this.$refs.list.onSearch();
+						this.$refs.list.onSearch(this.params);
+					} else {
+						this.$message.error('操作失败');
+					}
+				})
+				.catch(result => {
+					this.$message({
+						message: (result && result.error && result.error.message) || '保存失败！',
+						type: 'error'
+					});
+				});
+			this.dialogFormVisible = false;
+		},
+		onRegister() {
+			this.loading = true;
+			const userData = this.form;
+			registerUser(userData)
+				.then(res => {
+					if (res && res.success) {
+						this.$message({
+							message: '操作成功',
+							type: 'success'
+						});
+						this.$refs.list.onSearch(this.params);
 					} else {
 						this.$message.error('操作失败');
 					}
@@ -191,6 +220,8 @@ export default {
 			this.$refs.list.onSearch(this.params);
 		},
 		onCreate() {
+			this.form = {};
+			this.form.id = 0;
 			this.dialogFormVisible = true;
 		},
 		onChangePassword(index, row) {
