@@ -1,0 +1,12 @@
+.el-menu {
+    background-color: #545c64;
+    width: 100%;
+}
+
+.el-menu-item .custom-submenu .is-active {
+    background-color: #3399ff;
+}
+
+.is-active {
+    background-color: #3399ff;
+}

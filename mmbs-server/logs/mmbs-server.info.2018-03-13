@@ -1,0 +1,6 @@
+{"level":"info","message":"Mmbs LiveQuery Server starts running","timestamp":"2018-03-13T02:15:13.433Z"}
+{"level":"info","message":"Mmbs LiveQuery Server starts running","timestamp":"2018-03-13T08:05:07.208Z"}
+{"functionName":"hello","params":{},"level":"info","message":"Ran cloud function hello for user undefined with:\n  Input: {}\n  Result: \"hello Mmbs\"","timestamp":"2018-03-13T08:05:29.803Z"}
+{"error":{"code":119,"message":"anonymous  user isn't allowed to perform the create operation."},"level":"error","message":"Error handling request: s {\n  code: 119,\n  message: 'anonymous  user isn\\'t allowed to perform the create operation.' }","timestamp":"2018-03-13T08:06:36.465Z"}
+{"code":119,"message":"anonymous  user isn't allowed to perform the create operation.","level":"error","timestamp":"2018-03-13T08:06:36.471Z"}
+{"level":"info","message":"Mmbs LiveQuery Server starts running","timestamp":"2018-03-13T08:09:34.575Z"}
