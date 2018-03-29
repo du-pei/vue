@@ -1,0 +1,4 @@
+##ignore this file##
+/eleManage-mmbs_client/node_modules
+/mmbs-server/node_modules
+/mmbs-server/logs
