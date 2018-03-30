@@ -65,6 +65,32 @@ export default {
 			items: [],
 			collectionName: 'meuns',
 			dialogFormVisible: false,
+			operates: [
+				{
+					text: '新增',
+					name: 'create',
+					isCheck: true,
+					id: 1
+				},
+				{
+					text: '修改',
+					name: 'updata',
+					isCheck: true,
+					id: 2
+				},
+				{
+					text: '删除',
+					name: 'delete',
+					isCheck: false,
+					id: 3
+				},
+				{
+					text: '查看',
+					name: 'view',
+					isCheck: true,
+					id: 4
+				}
+			],
 			form: {
 				id: 0,
 				displayName: '',
@@ -77,7 +103,9 @@ export default {
 				isActive: true,
 				icon: '',
 				isStatic: false,
-				parentId: ''
+				parentId: '',
+				isConnMenu: false,
+				operates: this.operates
 			},
 			title: '',
 			loading: false
@@ -110,6 +138,7 @@ export default {
 			this.form.isActive = true;
 			this.form.customData = new Date();
 			this.form.parentId = row != null ? row.id : '';
+			this.form.operates = this.operates;
 		},
 		callOf() {
 			this.dialogFormVisible = false;
