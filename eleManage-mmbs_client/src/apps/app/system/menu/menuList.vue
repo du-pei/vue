@@ -27,7 +27,7 @@ export default {
 		return {
 			columns: [
 				{ title: '显示名称', key: 'displayName', treeField: true, width: '50', align: 'left' },
-				{ title: '名称', key: 'name', width: '50', align: 'center' },
+				{ title: '名称', key: 'name', width: '80', align: 'center' },
 				{ title: '图标', key: 'icon', width: '50', align: 'left' },
 				{ title: '地址', key: 'url', width: '50', align: 'left' },
 				//{ title: '父级Id', key: 'parentId', width: '50', align: 'center' },
@@ -69,26 +69,22 @@ export default {
 				{
 					text: '新增',
 					name: 'create',
-					isCheck: true,
-					id: 1
+					isCheck: true
 				},
 				{
 					text: '修改',
 					name: 'updata',
-					isCheck: true,
-					id: 2
+					isCheck: true
 				},
 				{
 					text: '删除',
 					name: 'delete',
-					isCheck: false,
-					id: 3
+					isCheck: true
 				},
 				{
 					text: '查看',
 					name: 'view',
-					isCheck: true,
-					id: 4
+					isCheck: true
 				}
 			],
 			form: {
@@ -179,6 +175,7 @@ export default {
 			getMenuById(row.id).then(res => {
 				if (res.success) {
 					this.form = res.result;
+					console.log(this.form);
 					this.dialogFormVisible = true;
 				} else {
 					this.$message({

@@ -45,11 +45,32 @@
 		</el-form-item>
 		<el-form-item label="操作">
 			<el-checkbox-group v-model="checked" @change="checkBox">
-				<el-checkbox v-for="item in form.operates" :checked="item.isCheck" :key="item.id" :label="item.name">
-					{{item.text}}
-				</el-checkbox>
+				<ul>
+					<template v-for="item in form.operates">
+						<li :key="item.text">
+							<el-checkbox :label="item.name" :checked="item.isCheck" v-model="item.isCheck" :key="item.name" >{{item.text}}</el-checkbox>	
+							<i class="el-icon-remove"></i>						
+						</li>
+					</template>
+				</ul>
+				
+				<el-button type="primary" icon="el-icon-plus" placeholder="添加操作" @click="addOpt" size="mini" circle></el-button>
 			</el-checkbox-group>
 		</el-form-item>
+		<el-dialog :title="title" :visible.sync="dialogFormOpt" :close-on-click-modal='false' :before-close='callOf' append-to-body width="30%">
+			<el-form>
+				<el-form-item label="名称">
+					<el-input v-model="optForm.text"></el-input>
+				</el-form-item>
+				<el-form-item label="值">
+					<el-input v-model="optForm.name"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="callOf">取 消</el-button>
+				<el-button type="primary" @click="saveOpt">确 定</el-button>
+			</div>
+		</el-dialog>
 	</el-form>
 </template>
 
@@ -72,7 +93,14 @@ export default {
 					label: '否'
 				}
 			],
-			checked: null
+			dialogFormOpt: false,
+			checked: [],
+			optForm: {
+				text: '',
+				name: '',
+				isCheck: true
+			},
+			title: '添加操作'
 		};
 	},
 	props: {
@@ -101,16 +129,27 @@ export default {
 				def.displayName = '无';
 				def.id = '';
 				res.unshift(def);
-				console.log(res);
 				this.treeData = res;
 			});
 		},
 		getValue() {
 			alert(this.selectVal.join());
 		},
-		checkBox(obj, te) {
-			console.log(obj);
-			console.log(te);
+		checkBox(item) {
+			console.log(item);
+			console.log(this.form);
+		},
+		addOpt() {
+			this.dialogFormOpt = true;
+		},
+		callOf() {
+			this.optForm.key = '';
+			this.optForm.value = '';
+			this.dialogFormOpt = false;
+		},
+		saveOpt() {
+			this.form.operates.push(this.optForm);
+			this.callOf();
 		}
 	}
 };
