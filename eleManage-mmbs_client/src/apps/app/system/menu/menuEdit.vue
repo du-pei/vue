@@ -46,14 +46,13 @@
 		<el-form-item label="操作">
 			<el-checkbox-group v-model="checked" @change="checkBox">
 				<ul>
-					<template v-for="item in form.operates">
-						<li :key="item.text">
-							<el-checkbox :label="item.name" :checked="item.isCheck" v-model="item.isCheck" :key="item.name" >{{item.text}}</el-checkbox>	
-							<i class="el-icon-remove"></i>						
+					<template v-for="(item, index) in form.operates">
+						<li :key="index">
+							<el-checkbox :label="item.name" :checked="item.isActive" v-model="item.isActive" :key="index">{{item.text}}</el-checkbox>
+							<i class="el-icon-remove opt-remove" @click="deleteOpt(item)" title="删除操作"></i>
 						</li>
 					</template>
 				</ul>
-				
 				<el-button type="primary" icon="el-icon-plus" placeholder="添加操作" @click="addOpt" size="mini" circle></el-button>
 			</el-checkbox-group>
 		</el-form-item>
@@ -98,7 +97,7 @@ export default {
 			optForm: {
 				text: '',
 				name: '',
-				isCheck: true
+				isActive: true
 			},
 			title: '添加操作'
 		};
@@ -136,21 +135,51 @@ export default {
 			alert(this.selectVal.join());
 		},
 		checkBox(item) {
-			console.log(item);
-			console.log(this.form);
+			for (const key in this.form.operates) {
+				if (this.form.operates.hasOwnProperty(key)) {
+					const name = this.form.operates[key].name;
+					if (item.contains(name)) {
+						this.form.operates[key].isActive = true;
+					} else {
+						this.form.operates[key].isActive = false;
+					}
+				}
+			}
 		},
 		addOpt() {
 			this.dialogFormOpt = true;
 		},
 		callOf() {
-			this.optForm.key = '';
-			this.optForm.value = '';
+			this.optForm.text = '';
+			this.optForm.name = '';
 			this.dialogFormOpt = false;
 		},
 		saveOpt() {
-			this.form.operates.push(this.optForm);
+			const newForm = Object.assign({}, this.optForm);			
+			console.log(newForm == this.optForm)
+			this.form.operates.push(newForm);
+			console.log(this.form.operates);
 			this.callOf();
+		},
+		deleteOpt(item) {
+			for (const key in this.form.operates) {
+				if (this.form.operates.hasOwnProperty(key)) {
+					const name = this.form.operates[key].name;
+					if (item.name == name) {
+						this.form.operates = this.form.operates.filter(obj => obj.name !== item.name);
+						return;
+					}
+				}
+			}
 		}
 	}
 };
 </script>
+<style>
+.opt-remove {
+	padding-left: 10px;
+	font-size: 14px;
+	color: red;
+	cursor: pointer;
+}
+</style>

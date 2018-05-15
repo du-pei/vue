@@ -8,7 +8,7 @@
 			<template slot="columns">
 				<el-table-column fixed type=index label="序号" align="center" width="70">
 				</el-table-column>
-				<el-table-column fixed prop="attributes.displayName" align="center" label="名称" width="180">
+				<el-table-column fixed prop="attributes.displayName" align="center" label="显示名称" width="180">
 				</el-table-column>
 				<el-table-column prop="attributes.username" align="center" label="用户名" width="180"></el-table-column>
 				<el-table-column prop="attributes.mobilePhone" align="center" label="移动电话" width="180"></el-table-column>
@@ -29,8 +29,8 @@
 					<template slot-scope="scope">
 						<el-button size="mini" type="" @click="onEdit(scope.$index, scope.row)">修改
 						</el-button>
-						<!-- <el-button size="mini" type="" @click="onChangePassword(scope.$index, scope.row)">修改密码</el-button>
-						<el-button size="mini" type="" @click="onChangeRole()">查看角色</el-button>
+						 <el-button size="mini" type="" @click="onChangePassword(scope.$index, scope.row)">修改密码</el-button>
+						<!--<el-button size="mini" type="" @click="onChangeRole()">查看角色</el-button>
 						<el-button size="mini" type="" @click="onChangeOrg()">分配组织机构</el-button>
 						<el-button size="mini" type="" @click="on">启用</el-button>
 						<el-button size="mini" type="" @click="on">禁用</el-button>
@@ -39,14 +39,15 @@
 					</template>
 				</el-table-column>
 			</template>
+
 		</grid>
 		<!-- 修改用户 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
-			<edit v-if="dialogFormVisible" :form="form"></edit>
+			<edit @refreshList="onRefresh" @showLoading="onLoading" @handleClseDialog="handleClseDialog" v-if="dialogFormVisible" ref='form' :form="form"></edit>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogFormVisible = false">取 消</el-button>
-				<el-button type="primary" v-if="this.form.id == 0" @click="onRegister" v-loading="loading">确 定</el-button>
-				<el-button type="primary" v-else @click="onSave" v-loading="loading">确 定</el-button>
+				<el-button type="primary" v-if="this.form.id == 0" @click="onRegisterUser" v-loading="loading">确 定</el-button>
+				<el-button type="primary" v-else @click="onUpdateUser" v-loading="loading">确 定</el-button>
 			</div>
 		</el-dialog>
 		<!-- 修改密码 -->
@@ -58,21 +59,21 @@
 			</div>
 		</el-dialog>
 		<!-- 查看角色 -->
-		<el-dialog :title="title" :visible.sync="dialogRoleVisible">
+		<!-- <el-dialog :title="title" :visible.sync="dialogRoleVisible">
 			<changeRole v-if="dialogRoleVisible" :form="form"></changeRole>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogRoleVisible = false">取 消</el-button>
 				<el-button type="primary" @click="onSave" v-loading="loading">确 定</el-button>
 			</div>
-		</el-dialog>
+		</el-dialog> -->
 		<!-- 分配组织机构 -->
-		<el-dialog :title="title" :visible.sync="dialogOrgVisible">
+		<!-- <el-dialog :title="title" :visible.sync="dialogOrgVisible">
 			<changeOrg v-if="dialogOrgVisible" :form="form"></changeOrg>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogOrgVisible = false">取 消</el-button>
 				<el-button type="primary" @click="onSave" v-loading="loading">确 定</el-button>
 			</div>
-		</el-dialog>
+		</el-dialog> -->
 	</div>
 </template>
 
@@ -89,7 +90,7 @@ export default {
 			params: {
 				userName: ''
 			},
-			height: '1000',
+			height: '700',
 			dialogFormVisible: false,
 			dialogOrgVisible: false,
 			dialogPasswordVisible: false,
@@ -103,6 +104,7 @@ export default {
 				isStatic: false,
 				lastLoginTime: '',
 				password: '',
+				rePass: '',
 				username: '',
 				mobilePhone: '',
 				email: ''
@@ -126,6 +128,9 @@ export default {
 		console.log(this.$route);
 	},
 	methods: {
+		onRegisterUser() {
+			this.$refs.form.onRegister();
+		},
 		onEdit(index, row) {
 			this.form = {};
 			this.form.id = row.id;
@@ -135,7 +140,7 @@ export default {
 			this.dialogFormVisible = true;
 		},
 		onDelete(index, row) {
-			this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+			this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
@@ -167,51 +172,14 @@ export default {
 					});
 				});
 		},
-		onSave() {
-			this.loading = true;
-			const userData = this.form;
-			saveUser(userData)
-				.then(res => {
-					if (res && res.success) {
-						this.$message({
-							message: '操作成功',
-							type: 'success'
-						});
-						this.$refs.list.onSearch(this.params);
-					} else {
-						this.$message.error('操作失败');
-					}
-				})
-				.catch(result => {
-					this.$message({
-						message: (result && result.error && result.error.message) || '保存失败！',
-						type: 'error'
-					});
-				});
+		onUpdateUser() {
+			this.$refs.form.onUpdate()
+		},
+		handleClseDialog() {
 			this.dialogFormVisible = false;
 		},
-		onRegister() {
+		onLoading() {
 			this.loading = true;
-			const userData = this.form;
-			registerUser(userData)
-				.then(res => {
-					if (res && res.success) {
-						this.$message({
-							message: '操作成功',
-							type: 'success'
-						});
-						this.$refs.list.onSearch(this.params);
-					} else {
-						this.$message.error('操作失败');
-					}
-				})
-				.catch(result => {
-					this.$message({
-						message: (result && result.error && result.error.message) || '保存失败！',
-						type: 'error'
-					});
-				});
-			this.dialogFormVisible = false;
 		},
 		onDigChange() {
 			this.dialogFormVisible = !this.dialogFormVisible;
@@ -220,6 +188,7 @@ export default {
 			this.$refs.list.onSearch(this.params);
 		},
 		onCreate() {
+			this.title = '新增用户';
 			this.form = {};
 			this.form.id = 0;
 			this.dialogFormVisible = true;
@@ -269,7 +238,6 @@ export default {
 			}
 		},
 		resetForm() {
-			console.log(this.$refs);
 			this.$refs.changePassword.resetForm();
 		}
 	}

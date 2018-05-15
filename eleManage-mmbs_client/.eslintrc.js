@@ -46,7 +46,7 @@ module.exports = {
          */
 
         // enforce return statements in callbacks of array methods
-        'array-callback-return': 'error',
+        'array-callback-return': 0,
 
         // enforce consistent brace style for all control statements
         curly: ['error', 'multi-line'],
@@ -224,7 +224,7 @@ module.exports = {
 
         // enforce consistent spacing between keys and values in object literal properties
         // 在对象字面量属性中实现键和值之间的一致间距（键间距）
-        'key-spacing': 'error',
+        'key-spacing': 0,
 
         // enforce consistent spacing before and after keywords
         // 在关键字之前和之后执行一致的间距（keyword-spacing）

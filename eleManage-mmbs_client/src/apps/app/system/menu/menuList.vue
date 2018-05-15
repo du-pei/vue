@@ -26,7 +26,7 @@ export default {
 	data() {
 		return {
 			columns: [
-				{ title: '显示名称', key: 'displayName', treeField: true, width: '50', align: 'left' },
+				{ title: '显示名称', key: 'displayName', treeField: true, width: '120', align: 'left' },
 				{ title: '名称', key: 'name', width: '80', align: 'center' },
 				{ title: '图标', key: 'icon', width: '50', align: 'left' },
 				{ title: '地址', key: 'url', width: '50', align: 'left' },
@@ -69,22 +69,22 @@ export default {
 				{
 					text: '新增',
 					name: 'create',
-					isCheck: true
+					isActive: true
 				},
 				{
 					text: '修改',
 					name: 'updata',
-					isCheck: true
+					isActive: true
 				},
 				{
 					text: '删除',
 					name: 'delete',
-					isCheck: true
+					isActive: true
 				},
 				{
 					text: '查看',
 					name: 'view',
-					isCheck: true
+					isActive: true
 				}
 			],
 			form: {

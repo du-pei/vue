@@ -17,7 +17,8 @@
 
 <script>
 import { login } from '@/api/index.js';
-
+import $ from 'jquery';
+import md5 from '../../../static/js/md5.min.js'
 export default {
 	data() {
 		return {
@@ -63,10 +64,11 @@ export default {
 						if (data && data.success) {
 							const userInfo = data.result;
 							this.logining = false;
+							this.loginAnyReport();
 							this.$message({
 								type: 'success',
 								message: '登录成功!'
-							});
+							});							
 							// this.user.userName = userInfo.attributes.username;
 							// this.user.objectId = userInfo.id;
 							// this.user.sessionToken = userInfo.attributes.sessionToken;
@@ -96,6 +98,27 @@ export default {
 			if (localStorage.user !== 'undefined') {
 				this.$router.push('manage');
 			}
+		},
+		loginAnyReport() {
+			$.ajax({
+				url: 'http://localhost:9905/dmp/index/sso.htm',
+				data: { userName: 'demo', password: md5('123456') },
+				dataType: 'jsonp',
+				jsonp: 'callback',
+				success(code) {					
+					if (code == 0) {
+						localStorage.report = code;
+						//alert('success');
+						//success
+					} else {
+						//error
+					}
+				},
+				error(err) {
+					console.log(err);
+					//error
+				}
+			});
 		}
 	}
 };

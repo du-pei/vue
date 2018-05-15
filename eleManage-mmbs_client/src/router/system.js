@@ -3,6 +3,8 @@ import Router from 'vue-router';
 
 import AssetList from '../apps/app/system/Asset/AssetList.vue';
 import MenuList from '../apps/app/system/menu/menuList.vue';
+import Test from '../apps/app/system/menu/test.vue';
+import Accident from '../apps/app/system/menu/accident.vue';
 import AssetTypeList from '../apps/app/system/Asset/AssetTypeList.vue';
 import ManufacturerList from '../apps/app/system/Asset/ManufacturerList.vue';
 import ModelList from '../apps/app/system/Asset/ModelList.vue';
@@ -16,6 +18,7 @@ import Folderlist from '../apps/app/system/file/folderlist.vue';
 import Auditlog from '../apps/app/system/log/auditlog.vue';
 import UserList from '../apps/app/system/user/userlist.vue';
 import AdministrativeRegions from '../apps/app/system/administrative/regions.vue';
+import WorkFlowDsigner from '../apps/app/system/workFlow/designer.vue';
 Vue.use(Router);
 
 export const routes = [{
@@ -29,6 +32,18 @@ export const routes = [{
         path: '/system/menu/MenuList',
         component: MenuList,
         meta: ['系统菜单']
+    },
+    {
+        name: '报表集成',
+        path: '/system/menu/test',
+        component: Test,
+        meta: ['报表']
+    },
+    {
+        name: '事故信息统计',
+        path: '/system/menu/accident',
+        component: Accident,
+        meta: ['事故统计']
     },
     {
         name: 'AdministrativeRegions',
@@ -107,5 +122,11 @@ export const routes = [{
         path: '/system/user/userlist',
         component: UserList,
         meta: ['系统用户', '用户']
+    },
+    {
+        name: 'WorkFlowDisigner',
+        path: '/system/workFlow/designer',
+        component: WorkFlowDsigner,
+        meta: ['工作流设计']
     }
 ];

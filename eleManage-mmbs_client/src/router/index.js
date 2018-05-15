@@ -28,23 +28,30 @@ const routes = [{
 ];
 
 const router = new Router({ routes });
-
-//路由导航守卫
+let toPath = '';
+//路由导航守卫;
 router.beforeEach((to, from, next) => {
-    if (to.meta.requireAuth) {
-        // 判断该路由是否需要登录权限
-        if (localStorage.token !== undefined) {
-            // 通过vuex state获取当前的token是否存在
-            next();
-        } else {
+    console.log(from);
+    console.log(to);
+    console.log(this.$route);
+    if (to.path !== undefined) {
+        toPath = to.path;
+    }
+    console.log(localStorage.report);
+    // 判断该路由是否需要登录权限
+    if (localStorage.user !== undefined && localStorage.report !== undefined) {
+        // 通过vuex state获取当前的token是否存在
+        next();
+    } else {
+        console.log(to.path);
+        if (to === undefined || to.path != '/login') {
             next({
                 path: '/login',
                 query: { redirect: to.fullPath } // 将跳转的路由path作为参数，登录成功后跳转到该路由
             });
+        } else {
+            next();
         }
-        next();
-    } else {
-        next();
     }
 });
 

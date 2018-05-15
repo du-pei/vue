@@ -29,3 +29,5 @@ export const deleteData = (collectionName, obj) => mmbs.deleteData(collectionNam
 export const getTreeData = collectionName => mmbs.getTreeDataFromCloud(collectionName);
 //获取详细信息
 export const getDataById = (collectionName, id) => mmbs.getDataById(collectionName, id);
+//根据字段名称获取单条数据
+export const getObjectDataByName = (collectionName, name) => mmbs.getObjectDataByName(collectionName, name);

@@ -37,6 +37,7 @@ module.exports = {
             'vue$': 'vue/dist/vue.esm.js',
             '@': resolve('src'),
             'mmbs': path.join(resolve('static'), 'js', 'mmbs.js'),
+            'jquery': resolve('./static/js/jquery-1.11.1.min.js')
         }
     },
     module: {
