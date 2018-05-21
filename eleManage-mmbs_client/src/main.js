@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import App from './App';
+//4. 注入路由
 import router from './router';
 import plugins from './apps/plugin/index';
 import ElementUI from 'element-ui';
@@ -14,6 +15,9 @@ Vue.use(plugins);
 Vue.use(ElementUI);
 
 /* eslint-disable no-new */
+// 5. 创建和挂载根实例。
+// 记得要通过 router 配置参数注入路由，
+// 从而让整个应用都有路由功能
 new Vue({
     el: '#app',
     router,

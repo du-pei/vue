@@ -64,7 +64,7 @@ export default {
 						if (data && data.success) {
 							const userInfo = data.result;
 							this.logining = false;
-							this.loginAnyReport();
+							//this.loginAnyReport();
 							this.$message({
 								type: 'success',
 								message: '登录成功!'

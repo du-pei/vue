@@ -1,40 +1,40 @@
 <template>
 	<div>
-		<grid ref="list" :searchApi="searchApi" :height="height" :params="params">
-			<template slot="buttons">
-				<el-button size="medium" type="primary" class="el-icon-refresh" @click="onRefresh">刷新</el-button>
-				<el-button size="medium" type="primary" class="el-icon-circle-plus-outline" @click="onCreate">添加</el-button>
+		<grid ref='list' :searchApi='searchApi' :height='height' :params='params'>
+			<template slot='buttons'>
+				<el-button size='medium' type='primary' class='el-icon-refresh' @click='onRefresh'>刷新</el-button>
+				<el-button size='medium' type='primary' class='el-icon-circle-plus-outline' @click='onCreate'>添加</el-button>
 			</template>
-			<template slot="columns">
-				<el-table-column fixed type=index label="序号" align="center" width="70">
+			<template slot='columns'>
+				<el-table-column fixed type=index label='序号' align='center' width='70'>
 				</el-table-column>
-				<el-table-column fixed prop="attributes.displayName" align="center" label="显示名称" width="180">
+				<el-table-column fixed prop='attributes.displayName' align='center' label='显示名称' width='180'>
 				</el-table-column>
-				<el-table-column prop="attributes.username" align="center" label="用户名" width="180"></el-table-column>
-				<el-table-column prop="attributes.mobilePhone" align="center" label="移动电话" width="180"></el-table-column>
-				<el-table-column align="center" label="是否锁定" width="180">
-					<template slot-scope="scope">
+				<el-table-column prop='attributes.username' align='center' label='用户名' width='180'></el-table-column>
+				<el-table-column prop='attributes.mobilePhone' align='center' label='移动电话' width='180'></el-table-column>
+				<el-table-column align='center' label='是否锁定' width='180'>
+					<template slot-scope='scope'>
 						<span>{{$fmtBool(scope.row.attributes.isLock)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" label="是否启用" width="180">
-					<template slot-scope="scope">
+				<el-table-column align='center' label='是否启用' width='180'>
+					<template slot-scope='scope'>
 						<span>{{$fmtBool(scope.row.attributes.isActive)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="attributes.accessFailedCount" align="center" label="验证错误次数" width="180"></el-table-column>
-				<el-table-column prop="attributes.lastLoginTime" align="center" label="最后登录时间">
+				<el-table-column prop='attributes.accessFailedCount' align='center' label='验证错误次数' width='180'></el-table-column>
+				<el-table-column prop='attributes.lastLoginTime' align='center' label='最后登录时间'>
 				</el-table-column>
-				<el-table-column fixed="right" width="260" align="center" label="操作">
-					<template slot-scope="scope">
-						<el-button size="mini" type="" @click="onEdit(scope.$index, scope.row)">修改
+				<el-table-column fixed='right' width='260' align='center' label='操作'>
+					<template slot-scope='scope'>
+						<el-button size='mini' type='' @click='onEdit(scope.$index, scope.row)'>修改
 						</el-button>
-						 <el-button size="mini" type="" @click="onChangePassword(scope.$index, scope.row)">修改密码</el-button>
-						<!--<el-button size="mini" type="" @click="onChangeRole()">查看角色</el-button>
-						<el-button size="mini" type="" @click="onChangeOrg()">分配组织机构</el-button>
-						<el-button size="mini" type="" @click="on">启用</el-button>
-						<el-button size="mini" type="" @click="on">禁用</el-button>
-						<el-button size="mini" type="danger" @click="onDelete(scope.$index, scope.row)">删除
+						<el-button size='mini' type='' @click='onChangePassword(scope.$index, scope.row)'>修改密码</el-button>
+						<!--<el-button size='mini' type='' @click='onChangeRole()'>查看角色</el-button>
+						<el-button size='mini' type='' @click='onChangeOrg()'>分配组织机构</el-button>
+						<el-button size='mini' type='' @click='on'>启用</el-button>
+						<el-button size='mini' type='' @click='on'>禁用</el-button>
+						<el-button size='mini' type='danger' @click='onDelete(scope.$index, scope.row)'>删除
 						</el-button> -->
 					</template>
 				</el-table-column>
@@ -42,36 +42,36 @@
 
 		</grid>
 		<!-- 修改用户 -->
-		<el-dialog :title="title" :visible.sync="dialogFormVisible">
-			<edit @refreshList="onRefresh" @showLoading="onLoading" @handleClseDialog="handleClseDialog" v-if="dialogFormVisible" ref='form' :form="form"></edit>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="dialogFormVisible = false">取 消</el-button>
-				<el-button type="primary" v-if="this.form.id == 0" @click="onRegisterUser" v-loading="loading">确 定</el-button>
-				<el-button type="primary" v-else @click="onUpdateUser" v-loading="loading">确 定</el-button>
+		<el-dialog :title='title' :visible.sync='dialogFormVisible'>
+			<edit @refreshList='onRefresh' @showLoading='onLoading' @handleClseDialog='handleClseDialog' v-if='dialogFormVisible' ref='form' :form='form'></edit>
+			<div slot='footer' class='dialog-footer'>
+				<el-button @click='dialogFormVisible = false'>取 消</el-button>
+				<el-button type='primary' v-if='this.form.id == 0' @click='onRegisterUser' v-loading='loading'>确 定</el-button>
+				<el-button type='primary' v-else @click='onUpdateUser' v-loading='loading'>确 定</el-button>
 			</div>
 		</el-dialog>
 		<!-- 修改密码 -->
-		<el-dialog :title="title" :visible.sync="dialogPasswordVisible">
-			<changePassword ref="changePassword" v-if="dialogPasswordVisible" :form="changePassForm"></changePassword>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="dialogPasswordVisible = false">取 消</el-button>
-				<el-button type="primary" @click="onSavePass" v-loading="loading">确 定</el-button>
+		<el-dialog :title='title' :visible.sync='dialogPasswordVisible'>
+			<changePassword ref='changePassword' v-if='dialogPasswordVisible' :form='changePassForm'></changePassword>
+			<div slot='footer' class='dialog-footer'>
+				<el-button @click='dialogPasswordVisible = false'>取 消</el-button>
+				<el-button type='primary' @click='onSavePass' v-loading='loading'>确 定</el-button>
 			</div>
 		</el-dialog>
 		<!-- 查看角色 -->
-		<!-- <el-dialog :title="title" :visible.sync="dialogRoleVisible">
-			<changeRole v-if="dialogRoleVisible" :form="form"></changeRole>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="dialogRoleVisible = false">取 消</el-button>
-				<el-button type="primary" @click="onSave" v-loading="loading">确 定</el-button>
+		<!-- <el-dialog :title='title' :visible.sync='dialogRoleVisible'>
+			<changeRole v-if='dialogRoleVisible' :form='form'></changeRole>
+			<div slot='footer' class='dialog-footer'>
+				<el-button @click='dialogRoleVisible = false'>取 消</el-button>
+				<el-button type='primary' @click='onSave' v-loading='loading'>确 定</el-button>
 			</div>
 		</el-dialog> -->
 		<!-- 分配组织机构 -->
-		<!-- <el-dialog :title="title" :visible.sync="dialogOrgVisible">
-			<changeOrg v-if="dialogOrgVisible" :form="form"></changeOrg>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="dialogOrgVisible = false">取 消</el-button>
-				<el-button type="primary" @click="onSave" v-loading="loading">确 定</el-button>
+		<!-- <el-dialog :title='title' :visible.sync='dialogOrgVisible'>
+			<changeOrg v-if='dialogOrgVisible' :form='form'></changeOrg>
+			<div slot='footer' class='dialog-footer'>
+				<el-button @click='dialogOrgVisible = false'>取 消</el-button>
+				<el-button type='primary' @click='onSave' v-loading='loading'>确 定</el-button>
 			</div>
 		</el-dialog> -->
 	</div>
@@ -124,8 +124,60 @@ export default {
 		changePassword,
 		changeRole
 	},
+	beforeCreate: function () {
+		console.group('------beforeCreate创建前状态------');
+		console.log('%c%s', 'color:red', 'el     : ' + this.$el); //undefined
+		console.log('%c%s', 'color:red', 'data   : ' + this.$data); //undefined 
+		console.log('%c%s', 'color:red', 'message: ' + this.message)
+	},
 	created() {
-		console.log(this.$route);
+		console.group('------created创建完毕状态------');
+		console.log('%c%s', 'color:red', 'el     : ' + this.$el); //undefined
+		console.log('%c%s', 'color:red', 'data   : ' + this.$data); //已被初始化
+		console.log(this.$data.form);
+		console.log('%c%s', 'color:red', 'message: ' + this.message); //已被初始化
+	},
+	beforeMount: function () {
+		console.group('------beforeMount挂载前状态------');
+		console.log('%c%s', 'color:red', 'el     : ' + (this.$el)); //已被初始化
+		console.log(this.$el);
+		console.log('%c%s', 'color:red', 'data   : ' + this.$data); //已被初始化  
+		console.log('%c%s', 'color:red', 'message: ' + this.message); //已被初始化  
+	},
+	mounted: function () {
+		console.group('------mounted 挂载结束状态------');
+		console.log('%c%s', 'color:red', 'el     : ' + this.$el); //已被初始化
+		console.log(this.$el);
+		console.log('%c%s', 'color:red', 'data   : ' + this.$data); //已被初始化
+		console.log('%c%s', 'color:red', 'message: ' + this.message); //已被初始化 
+	},
+	beforeUpdate: function () {
+		console.group('beforeUpdate 更新前状态===============》');
+		console.log('%c%s', 'color:red', 'el     : ' + this.$el);
+		console.log(this.$el);
+		console.log('%c%s', 'color:red', 'data   : ' + this.$data);
+		console.log('%c%s', 'color:red', 'message: ' + this.message);
+	},
+	updated: function () {
+		console.group('updated 更新完成状态===============》');
+		console.log('%c%s', 'color:red', 'el     : ' + this.$el);
+		console.log(this.$el);
+		console.log('%c%s', 'color:red', 'data   : ' + this.$data);
+		console.log('%c%s', 'color:red', 'message: ' + this.message);
+	},
+	beforeDestroy: function () {
+		console.group('beforeDestroy 销毁前状态===============》');
+		console.log('%c%s', 'color:red', 'el     : ' + this.$el);
+		console.log(this.$el);
+		console.log('%c%s', 'color:red', 'data   : ' + this.$data);
+		console.log('%c%s', 'color:red', 'message: ' + this.message);
+	},
+	destroyed: function () {
+		console.group('destroyed 销毁完成状态===============》');
+		console.log('%c%s', 'color:red', 'el     : ' + this.$el);
+		console.log(this.$el);
+		console.log('%c%s', 'color:red', 'data   : ' + this.$data);
+		console.log('%c%s', 'color:red', 'message: ' + this.message)
 	},
 	methods: {
 		onRegisterUser() {

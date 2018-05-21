@@ -1,5 +1,5 @@
 <template>
-  <el-form :model='form' :rules='rules' ref='form' label-width="80px">
+  <el-form :model='form' status-icon :rules='rules' ref='form' label-width="80px" class="demo-ruleForm">
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label='用户名' prop='username'>
@@ -26,12 +26,12 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label='联系电话'>
+        <el-form-item label='联系电话' prop='mobilePhone'>
           <el-input v-model='form.mobilePhone' auto-complete='off'></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label='邮箱'>
+        <el-form-item label='邮箱' prop='email'>
           <el-input v-model='form.email' auto-complete='off'></el-input>
         </el-form-item>
       </el-col>
@@ -68,23 +68,37 @@ export default {
         callback(new Error('请输入显示名称'));
       } else {
         getObjectDataByName('displayName', value).then(res => {
-          if (res && res.success) {            
-            if (res.result.length > 0) {
+          if (res && res.success) {
+            if (res.result.length > 1 || res.result.length == 1 && res.result[0].id != this.form.id) {
               callback(new Error('名称已存在，换一个吧'));
+            } else {
+              callback();
             }
+          } else {
+            callback(new Error('服务器错误'));
           }
         })
       }
     };
+    const CheckTel = (rule, value, callback) => {
+      const myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+      if (!myreg.test(value)) {
+        callback(new Error('请输入正确的电话号码'));
+      } else {
+        callback();
+      }
+    }
     return {
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 3, message: '长度最少3个字符', trigger: 'blur' }
         ],
-        displayName: [{ required: true, message: '请输入用户名', validator: validateDname, trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码', validator: validatePass, trigger: 'blur' }],
-        rePass: [{ required: true, message: '请输入重复密码', validator: validatePass2, trigger: 'blur' }]
+        displayName: [{ required: true, validator: validateDname, trigger: 'blur' }],
+        password: [{ required: true, validator: validatePass, trigger: 'blur' }],
+        rePass: [{ required: true, validator: validatePass2, trigger: 'blur' }],
+        email: [{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }],
+        mobilePhone: [{ validator: CheckTel, trigger: ['blur', 'change'] }]
       }
     };
   },
@@ -92,7 +106,13 @@ export default {
     form: {
       type: Object,
       default() {
-        return {};
+        return {
+          username: '',
+          displayName: '',
+          password: '',
+          mobilePhone: '',
+          email: ''
+        };
       },
       required: true
     }

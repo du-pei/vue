@@ -1,7 +1,7 @@
 <template>
   <div class="main-body">
-    <yt-map>
-    </yt-map>
+    <!-- <yt-map>
+    </yt-map> -->
   </div>
 </template>
 <script>
